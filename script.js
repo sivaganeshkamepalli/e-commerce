@@ -270,28 +270,55 @@ cart.push({...products.find(p=>p.id===id), qty:1});
 save();
 renderCart();
 }
+function renderCart() {
+    let list = document.getElementById("cartList");
+    list.innerHTML = "";
 
-function renderCart(){
-let list=document.getElementById('cartList');
-list.innerHTML='';
-let total=0;
+    // If cart is empty
+    if (cart.length === 0) {
+        list.innerHTML = `
+            <div class="empty-cart">
+                <img src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png" alt="Empty Cart">
+                <h3>No Products in Cart</h3>
+                <p>Your cart is empty.</p>
+            </div>
+        `;
 
-cart.forEach((item,i)=>{
-total+=item.price*item.qty;
+        document.getElementById("total").textContent = 0;
+        document.getElementById("cartCount").textContent = 0;
+        return;
+    }
 
-let li=document.createElement('li');
-li.innerHTML=`
-${item.name} ₹${item.price} x ${item.qty}
-<button onclick="changeQty(${i},1)">+</button>
-<button onclick="changeQty(${i},-1)">-</button>
-<button onclick="removeItem(${i})">Remove</button>
-`;
+    let total = 0;
 
-list.appendChild(li);
-});
+    cart.forEach((item, i) => {
+        total += item.price * item.qty;
 
-document.getElementById('total').textContent=total;
-document.getElementById('cartCount').textContent=cart.length;
+        let li = document.createElement("li");
+        li.className = "cart-card";
+
+        li.innerHTML = `
+            <img src="${item.img}" class="cart-img">
+
+            <div class="cart-details">
+                <h4>${item.name}</h4>
+                <p>Price : ₹${item.price}</p>
+                <p>Quantity : ${item.qty}</p>
+                <p><strong>Total : ₹${item.price * item.qty}</strong></p>
+            </div>
+
+            <div class="cart-buttons">
+                <button onclick="changeQty(${i},1)">+</button>
+                <button onclick="changeQty(${i},-1)">-</button>
+                <button onclick="removeItem(${i})">Remove</button>
+            </div>
+        `;
+
+        list.appendChild(li);
+    });
+
+    document.getElementById("total").textContent = total;
+    document.getElementById("cartCount").textContent = cart.length;
 }
 
 // ---------- WISHLIST ----------
